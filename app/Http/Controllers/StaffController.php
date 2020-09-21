@@ -14,7 +14,8 @@ class StaffController extends Controller
      */
     public function index()
     {
-        //
+        $staff=Staff::all(); //array of objects
+        return view('backend.staff.index',compact('staff'));
     }
 
     /**
@@ -24,7 +25,7 @@ class StaffController extends Controller
      */
     public function create()
     {
-        //
+         return view('backend.staff.create');
     }
 
     /**
@@ -35,18 +36,45 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //dd($request);
+
+        $request->validate([
+            "name" =>"required",
+            "profile"=>"required",
+            "phoneno"=>"required",
+            "address"=>"required",
+            "salary"=>"required"
+        ]);
+
+        // if include file, upload
+        if($request->file()) {
+            $fileName = time().'_'.$request->profile->getClientOriginalName(); // 1970 jan 1
+            $filePath = $request->file('profile')->storeAs('staff_profile', $fileName, 'public');
+            $path = 'storage/'.$filePath;
+        }
+
+        // data store
+        $staff = new Staff;
+        $staff->name = $request->name;
+        $staff->profile = $path;
+        $staff->phoneno = $request->phoneno;
+        $staff->address = $request->address;
+        $staff->salary = $request->salary;
+        $staff->save();
+
+        // return redirect
+        return redirect()->route('staff.index');
     }
 
     /**
      * Display the specified resource.
-     *
+     * 
      * @param  \App\Staff  $staff
      * @return \Illuminate\Http\Response
      */
     public function show(Staff $staff)
     {
-        //
+        return view('backend.staff.detail',compact("staff"));
     }
 
     /**
