@@ -24,7 +24,7 @@
 					<td>{{$row->phoneno}}</td>
 					<td>
 						<a href="{{route('staff.show',$row->id)}}" class="btn btn-info">Detail</a>
-						<a href="{{route('staff.edit',$row->id)}}" class="btn btn-primary">Edit</a>
+						<a href="{{route('staff.edit',$row->id)}}" class="btn btn-warning">Edit</a>
 						<form method="post" action="{{route('staff.destroy',$row->id)}}" onsubmit="return confirm('Are you sure?')" class="d-inline-block">
 							@csrf
 							@method('DELETE')
