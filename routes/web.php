@@ -17,7 +17,11 @@ use Illuminate\Support\Facades\Route;
 //     //return view('welcome');
 //     return 'Hello Laravel 7';
 // });
-Route::get('/','PageController@home')->name('homepage');
+//Route::get('/','PageController@home')->name('homepage');
+
+Route::get('/','MainController@main')->name('homepage');
+
+Route::get('detail/{id}','MainController@detail')->name('detailpage');
 
 Route::get('main/{key}','PageController@main')->name('mainpage');
 
@@ -26,3 +30,7 @@ Route::resource('staff','StaffController'); //7method
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::resource('department','DepartmentController');
+
+Route::resource('position','PositionController');
