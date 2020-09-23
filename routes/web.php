@@ -31,6 +31,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::resource('payroll','PayrollController');
+
 Route::resource('department','DepartmentController');
 
 Route::resource('position','PositionController');
+
+Route::post('getstaff','PayrollController@getstaff')->name('getstaff');

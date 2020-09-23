@@ -82,7 +82,9 @@ class StaffController extends Controller
      */
     public function show(Staff $staff)
     {
-        return view('backend.staff.detail',compact("staff"));
+        $departments=Department::all();
+        $positions=Position::all();
+        return view('backend.staff.detail',compact('staff','departments','positions'));
     }
 
     /**
@@ -93,7 +95,9 @@ class StaffController extends Controller
      */
     public function edit(Staff $staff)
     {
-        return view('backend.staff.edit',compact('staff'));
+        $departments=Department::all();
+        $positions=Position::all();
+        return view('backend.staff.edit',compact('staff','departments','positions'));
     }
 
     /**
@@ -111,7 +115,9 @@ class StaffController extends Controller
             "profile"=>"sometimes",
             "phoneno"=>"required",
             "address"=>"required",
-            "salary"=>"required"
+            "salary"=>"required",
+            "department"=>"required",
+            "position"=>"required"
         ]);
 
         // if include file, upload
@@ -130,6 +136,8 @@ class StaffController extends Controller
         $staff->phoneno = $request->phoneno;
         $staff->address = $request->address;
         $staff->salary = $request->salary;
+        $staff->department_id=$request->department;
+        $staff->position_id=$request->position;
         $staff->save();
 
         // return redirect
