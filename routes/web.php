@@ -38,3 +38,4 @@ Route::resource('department','DepartmentController');
 Route::resource('position','PositionController');
 
 Route::post('getstaff','PayrollController@getstaff')->name('getstaff');
+Route::post('getastaff','PayrollController@getastaff')->name('getastaff');

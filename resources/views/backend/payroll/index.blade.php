@@ -44,12 +44,76 @@
       </form>
 
 
-      <form id="payroll">
-        <table>
-          My Form
-        </table>
-      </form>
+     <form id="payroll" method="post" action="{{route('payroll.store')}}">
+        @csrf
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td colspan="4">
+                <h5 class="text-center">MMIT Payrolls</h5>
+                <p id="satff_name" class="text-center mb-0"></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">Earning:</td>
+              <td colspan="2">Deduction:</td>
+            </tr>
+            
+            <tr>
+              <td>Attendance Bonus:</td>
+              <td>
+                <input type="number" name="a_bonus" class="a_bonus">
+              </td>
+              <td>Attendance deduction:</td>
+              <td>
+                <input type="number" name="a_dedu" class="a_dedu">
+              </td>
+            </tr>
 
+            <tr>
+              <td>Other Bonus:</td>
+              <td>
+                <input type="number" name="o_bonus" class="o_bonus">
+              </td>
+              <td>Other deduction:</td>
+              <td>
+                <input type="number" name="o_dedu" class="o_dedu">
+              </td>
+            </tr>
+            <tr>
+              <td>Salary:</td>
+              <td>
+                <input type="number" name="salary" id="salary">
+                <input type="hidden" name="staff_id" id="staff_id">
+              </td>
+              <td>SSB:</td>
+              <td>
+                <input type="number" name="ssb" id="ssb">
+              </td>
+            </tr>
+
+            <tr>
+              <td>Earning:</td>
+              <td>
+                <input type="number" name="earning" class="earning" readonly>
+              </td>
+              <td>Deduction:</td>
+              <td>
+                <input type="number" name="deduction" class="deduction" readonly>
+              </td>
+            </tr>
+            
+            <tr>
+              <td colspan="3">Total Payment:</td>
+              <td>
+                <input type="number" name="total" class="total" readonly>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <input type="submit" class="btn btn-success" value="Save">
+      </form>
     </div>
   </div>
 @endsection
@@ -77,8 +141,35 @@
           $('#staff').html(html);
         })
       })
-      $('#staff').change(function () {
-        $('#payroll').show();
+       $('#staff').change(function () {
+        var id = $(this).val();
+        $.post("getastaff",{id:id},function (response) {
+          console.log(response)
+          $('#payroll').show();
+          $('#satff_name').text(response.name)
+          $('#salary').val(response.salary);
+          $('#staff_id').val(response.id);
+        })
+      })
+      $('.earning').focus(function (argument) {
+        var a_bonus = parseInt($('.a_bonus').val());
+        var o_bonus = parseInt($('.o_bonus').val());
+        var salary = parseInt($('#salary').val());
+        var earning = a_bonus+o_bonus+salary;
+        $(this).val(earning);
+      })
+      $('.deduction').focus(function (argument) {
+        var a_dedu = parseInt($('.a_dedu').val());
+        var o_dedu = parseInt($('.o_dedu').val());
+        var ssb = parseInt($('#ssb').val());
+        var deduction = a_dedu+o_dedu+ssb;
+        $(this).val(deduction);
+      })
+      $('.total').focus(function(argument){
+        var earning = parseInt($('.earning').val());
+        var deduction = parseInt($('.deduction').val());
+        var total= earning-deduction;
+        $(this).val(total);
       })
       
     })
