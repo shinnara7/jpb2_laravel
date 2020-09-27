@@ -25,17 +25,32 @@ Route::get('detail/{id}','MainController@detail')->name('detailpage');
 
 Route::get('main/{key}','PageController@main')->name('mainpage');
 
-Route::resource('staff','StaffController'); //7method
+Route::group(['middleware' => ['role:admin']], function () {
+ 
+ Route::resource('staff','StaffController'); //7method
 //get-4,post-1,put-1,delete-1
-Auth::routes();
+ Route::resource('payroll','PayrollController');
+
+ Route::resource('department','DepartmentController');
+
+ Route::resource('position','PositionController');
+
+ Route::post('getstaff','PayrollController@getstaff')->name('getstaff');
+
+ Route::post('getastaff','PayrollController@getastaff')->name('getastaff');
+
+Route::resource('editors','UserController');
+});
+
+Route::group(['middleware' => ['role:editor']], function () {
+
+	Route::resource('posts','PostsController');
+
+});
+Auth::routes(['register'=>false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('payroll','PayrollController');
 
-Route::resource('department','DepartmentController');
 
-Route::resource('position','PositionController');
-
-Route::post('getstaff','PayrollController@getstaff')->name('getstaff');
-Route::post('getastaff','PayrollController@getastaff')->name('getastaff');
+//ajax

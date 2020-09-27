@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Posts;
 use Illuminate\Http\Request;
+use App\Category;
 
 class PostsController extends Controller
 {
@@ -13,8 +14,9 @@ class PostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    {   
+        $posts=Posts::all();
+        return view('backend.post.index',compact('posts'));
     }
 
     /**
@@ -24,7 +26,8 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //
+         $categories = Category::all();
+        return view('backend.post.create',compact('categories'));
     }
 
     /**
@@ -35,9 +38,33 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        // dd($request);
+         $request->validate([
+            "category"=>"required",
+            "title" => "required",
+            "photo" => "required",            
+            "content" => "required"
+        ]);
+         // if include file, upload
+        if($request->file()) {
+            $fileName = time().'_'.$request->photo->getClientOriginalName(); // 1970 jan 1
+            $filePath = $request->file('photo')->storeAs('post_photo', $fileName, 'public');
+            $path = 'storage/'.$filePath;
+        }
 
+        // data store
+        $posts = new Posts;
+        $posts->category_id = $request->category;
+        $posts->photo = $path;
+        $posts->title = $request->title;
+        $posts->content = $request->content;
+        
+        $posts->save();
+         
+
+        // return redirect
+        return redirect()->route('posts.index');
+    }
     /**
      * Display the specified resource.
      *
@@ -46,7 +73,9 @@ class PostsController extends Controller
      */
     public function show(Posts $posts)
     {
-        //
+        
+          return view('backend.post.detail',compact('posts'));
+         
     }
 
     /**
@@ -80,6 +109,8 @@ class PostsController extends Controller
      */
     public function destroy(Posts $posts)
     {
-        //
+        // dd($posts);
+        $posts->delete();
+        return redirect()->route('posts.index');
     }
 }
